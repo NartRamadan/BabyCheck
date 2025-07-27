@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול מעון ילדים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme Colors */
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #81C784;
+            --secondary-color: #2196F3;
+            --secondary-dark: #1976D2;
+            --secondary-light: #64B5F6;
+            --accent-color: #FF9800;
+            --accent-dark: #F57C00;
+            --accent-light: #FFB74D;
+            
+            /* Neutral Colors */
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --text-light: #FFFFFF;
+            --background-primary: #FFFFFF;
+            --background-secondary: #F5F5F5;
+            --background-tertiary: #EEEEEE;
+            --border-color: #E0E0E0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            
+            /* Status Colors */
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #F44336;
+            --info-color: #2196F3;
+            
+            /* Typography */
+            --font-family: 'Heebo', sans-serif;
+            --font-size-small: 0.875rem;
+            --font-size-normal: 1rem;
+            --font-size-large: 1.125rem;
+            --font-size-xlarge: 1.25rem;
+            --font-size-xxlarge: 1.5rem;
+            --font-size-huge: 2rem;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-xxl: 3rem;
+            
+            /* Border Radius */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px var(--shadow-color);
+            --shadow-md: 0 4px 8px var(--shadow-color);
+            --shadow-lg: 0 8px 16px var(--shadow-color);
+            --shadow-xl: 0 12px 24px var(--shadow-color);
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --background-primary: #121212;
+            --background-secondary: #1E1E1E;
+            --background-tertiary: #2D2D2D;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Base Styles */
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-normal);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background-primary);
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            padding: var(--spacing-md) 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: var(--font-size-xxlarge);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo i {
+            font-size: var(--font-size-huge);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .theme-toggle,
+        .language-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--text-light);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            font-size: var(--font-size-large);
+        }
+
+        .theme-toggle:hover,
+        .language-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Navigation */
+        .main-nav {
+            background-color: var(--background-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-sm) 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-normal);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background-color: var(--background-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .nav-tab i {
+            font-size: var(--font-size-large);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: var(--spacing-xl) 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .view-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .view-header h2 {
+            font-size: var(--font-size-huge);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .view-header p {
+            color: var(--text-secondary);
+            font-size: var(--font-size-large);
+        }
+
+        /* Form Styles */
+        .activity-form-container {
+            background-color: var(--background-secondary);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .activity-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xl);
+        }
+
+        .form-section {
+            background-color: var(--background-primary);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-large);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: var(--font-size-normal);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-normal);
+            font-family: var(--font-family);
+            transition: border-color var(--transition-fast);
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Radio and Checkbox Groups */
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            transition: background-color var(--transition-fast);
+        }
+
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background-color: var(--background-tertiary);
+        }
+
+        .radio-item input,
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Mood Buttons */
+        .mood-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .mood-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-width: 80px;
+        }
+
+        .mood-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            color: var(--text-light);
+        }
+
+        .mood-btn.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .mood-btn i {
+            font-size: var(--font-size-xlarge);
+        }
+
+        .mood-btn span {
+            font-size: var(--font-size-small);
+            font-weight: 500;
+        }
+
+        /* Time Selector */
+        .time-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background-color: var(--background-primary);
+            min-width: 120px;
+        }
+
+        .time-text {
+            font-size: var(--font-size-large);
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .time-edit-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: var(--font-size-large);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .time-edit-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--text-light);
+        }
+
+        /* Quick Time Buttons */
+        .quick-time-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .quick-time-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-width: 70px;
+            font-size: var(--font-size-small);
+        }
+
+        .quick-time-btn:hover {
+            border-color: var(--secondary-color);
+            background-color: var(--secondary-light);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        .quick-time-btn i {
+            font-size: var(--font-size-large);
+        }
+
+        .quick-time-btn span {
+            font-weight: 600;
+        }
+
+        /* Sleep Quality Buttons */
+        .sleep-quality-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .sleep-quality-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .sleep-quality-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            color: var(--text-light);
+        }
+
+        .sleep-quality-btn.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .sleep-quality-btn i {
+            font-size: var(--font-size-large);
+        }
+
+        .sleep-quality-btn span {
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-secondary {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-normal);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+            font-family: var(--font-family);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background-color: var(--background-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-small);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Activities List */
+        .today-activities {
+            background-color: var(--background-secondary);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .today-activities h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-large);
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .activity-item {
+            background-color: var(--background-primary);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-fast);
+        }
+
+        .activity-item:hover {
+            transform: translateX(4px);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .activity-child {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: var(--font-size-large);
+        }
+
+        .activity-time {
+            color: var(--text-secondary);
+            font-size: var(--font-size-small);
+        }
+
+        .activity-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .activity-detail {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .activity-detail i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--background-primary);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            transform: scale(0.9);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xxlarge);
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+
+        /* Notifications */
+        .notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .notification {
+            background-color: var(--background-primary);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--success-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            min-width: 300px;
+            transform: translateX(100%);
+            transition: transform var(--transition-normal);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .notification.info {
+            border-left-color: var(--info-color);
+        }
+
+        .notification i {
+            font-size: var(--font-size-large);
+        }
+
+        .notification.success i {
+            color: var(--success-color);
+        }
+
+        .notification.error i {
+            color: var(--error-color);
+        }
+
+        .notification.warning i {
+            color: var(--warning-color);
+        }
+
+        .notification.info i {
+            color: var(--info-color);
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .no-activities {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: var(--spacing-xl);
+            font-style: italic;
+        }
+
+        /* Time Updated Animation */
+        .time-updated {
+            animation: timeUpdated 0.5s ease-in-out;
+        }
+
+        @keyframes timeUpdated {
+            0% {
+                transform: scale(1);
+                background-color: var(--background-primary);
+            }
+            50% {
+                transform: scale(1.05);
+                background-color: var(--success-color);
+                color: var(--text-light);
+            }
+            100% {
+                transform: scale(1);
+                background-color: var(--background-primary);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .header .container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .mood-buttons {
+                justify-content: center;
+            }
+            
+            .activity-form-container,
+            .today-activities {
+                padding: var(--spacing-lg);
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: var(--spacing-lg);
+            }
+            
+            .notifications {
+                right: 10px;
+                left: 10px;
+            }
+            
+            .notification {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: var(--font-size-large);
+            }
+            
+            .logo i {
+                font-size: var(--font-size-xxlarge);
+            }
+            
+            .view-header h2 {
+                font-size: var(--font-size-large);
+            }
+            
+            .form-section {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <i class="fas fa-baby"></i>
+                מעון ילדים
+            </h1>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-toggle" title="החלף מצב">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="language-toggle" class="language-toggle" title="החלף שפה">
+                    <i class="fas fa-globe"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-view="teachers">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>ממשק גננות</span>
+                </button>
+                <button class="nav-tab" data-view="parents">
+                    <i class="fas fa-users"></i>
+                    <span>ממשק הורים</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Teachers View -->
+            <div id="teachers-view" class="view active">
+                <div class="view-header">
+                    <h2><i class="fas fa-chalkboard-teacher"></i> ממשק גננות</h2>
+                    <p>הזנת פעילויות יומיות של הילדים</p>
+                </div>
+                
+                <!-- Activity Form -->
+                <div class="activity-form-container">
+                    <form id="activity-form" class="activity-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-child"></i> בחירת ילד</h3>
+                            <div class="form-group">
+                                <label for="child-select">ילד/ה:</label>
+                                <select id="child-select" required>
+                                    <option value="">בחר ילד/ה</option>
+                                </select>
+                                <button type="button" id="add-child-btn" class="btn-secondary">
+                                    <i class="fas fa-plus"></i> הוסף ילד
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-utensils"></i> אכילה</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>סוג ארוחה:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-type" value="breakfast">
+                                            <span>ארוחת בוקר</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-type" value="lunch">
+                                            <span>ארוחת צהריים</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-type" value="snack">
+                                            <span>חטיף</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>כמות:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-amount" value="all">
+                                            <span>אכל הכל</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-amount" value="half">
+                                            <span>חצי</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-amount" value="little">
+                                            <span>קצת</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="meal-amount" value="none">
+                                            <span>לא אכל</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="meal-notes">הערות:</label>
+                                <textarea id="meal-notes" placeholder="הערות מיוחדות על האכילה..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-tint"></i> שתייה</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>סוג משקה:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="drink-type" value="water">
+                                            <span>מים</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="drink-type" value="juice">
+                                            <span>מיץ</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="drink-type" value="milk">
+                                            <span>חלב</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="drink-amount">כמות (בכוסות):</label>
+                                    <input type="number" id="drink-amount" min="0" step="0.5" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-bed"></i> שינה</h3>
+                            
+                            <!-- שעת השכבה -->
+                            <div class="form-group">
+                                <label>שעת השכבה:</label>
+                                <div class="time-selector">
+                                    <div class="time-display" id="sleep-start-display">
+                                        <span class="time-text">--:--</span>
+                                        <button type="button" class="time-edit-btn" data-time-field="sleep-start">
+                                            <i class="fas fa-clock"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="sleep-start" name="sleep-start">
+                                </div>
+                            </div>
+
+                            <!-- שעת התעוררות -->
+                            <div class="form-group">
+                                <label>שעת התעוררות:</label>
+                                <div class="time-selector">
+                                    <div class="time-display" id="sleep-end-display">
+                                        <span class="time-text">--:--</span>
+                                        <button type="button" class="time-edit-btn" data-time-field="sleep-end">
+                                            <i class="fas fa-clock"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="sleep-end" name="sleep-end">
+                                </div>
+                            </div>
+
+                            <!-- כפתורי זמן מהיר -->
+                            <div class="form-group">
+                                <label>זמנים נפוצים:</label>
+                                <div class="quick-time-buttons">
+                                    <button type="button" class="quick-time-btn" data-field="sleep-start" data-time="08:00">
+                                        <i class="fas fa-sun"></i>
+                                        <span>08:00</span>
+                                    </button>
+                                    <button type="button" class="quick-time-btn" data-field="sleep-start" data-time="09:00">
+                                        <i class="fas fa-sun"></i>
+                                        <span>09:00</span>
+                                    </button>
+                                    <button type="button" class="quick-time-btn" data-field="sleep-start" data-time="10:00">
+                                        <i class="fas fa-sun"></i>
+                                        <span>10:00</span>
+                                    </button>
+                                    <button type="button" class="quick-time-btn" data-field="sleep-end" data-time="11:00">
+                                        <i class="fas fa-moon"></i>
+                                        <span>11:00</span>
+                                    </button>
+                                    <button type="button" class="quick-time-btn" data-field="sleep-end" data-time="12:00">
+                                        <i class="fas fa-moon"></i>
+                                        <span>12:00</span>
+                                    </button>
+                                    <button type="button" class="quick-time-btn" data-field="sleep-end" data-time="13:00">
+                                        <i class="fas fa-moon"></i>
+                                        <span>13:00</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>איכות שינה:</label>
+                                <div class="sleep-quality-buttons">
+                                    <button type="button" class="sleep-quality-btn" data-quality="good">
+                                        <i class="fas fa-star"></i>
+                                        <span>שינה שקטה</span>
+                                    </button>
+                                    <button type="button" class="sleep-quality-btn" data-quality="restless">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>חסר מנוחה</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-bath"></i> שירותים</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="bathroom-count">מספר פעמים:</label>
+                                    <input type="number" id="bathroom-count" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>סוג:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="bathroom-type" value="wet">
+                                            <span>רטוב</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="bathroom-type" value="dry">
+                                            <span>יבש</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bathroom-notes">הערות:</label>
+                                <textarea id="bathroom-notes" placeholder="הערות מיוחדות..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-smile"></i> מצב רוח</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>מצב רוח:</label>
+                                    <div class="mood-buttons">
+                                        <button type="button" class="mood-btn" data-mood="happy">
+                                            <i class="fas fa-smile"></i>
+                                            <span>שמח</span>
+                                        </button>
+                                        <button type="button" class="mood-btn" data-mood="sad">
+                                            <i class="fas fa-frown"></i>
+                                            <span>עצוב</span>
+                                        </button>
+                                        <button type="button" class="mood-btn" data-mood="angry">
+                                            <i class="fas fa-angry"></i>
+                                            <span>עצבני</span>
+                                        </button>
+                                        <button type="button" class="mood-btn" data-mood="calm">
+                                            <i class="fas fa-meh"></i>
+                                            <span>רגוע</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>רמת בכי:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="crying-level" value="none">
+                                            <span>לא בכה</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="crying-level" value="little">
+                                            <span>קצת</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="crying-level" value="much">
+                                            <span>הרבה</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-gamepad"></i> פעילויות</h3>
+                            <div class="form-group">
+                                <label>סוגי פעילויות:</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="activities" value="free-play">
+                                        <span>משחק חופשי</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="activities" value="structured-play">
+                                        <span>משחק מובנה</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="activities" value="art">
+                                        <span>יצירה וציור</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="activities" value="music">
+                                        <span>שירים וסיפורים</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="activities" value="outdoor">
+                                        <span>משחק בחצר</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="activity-notes">הערות על פעילויות:</label>
+                                <textarea id="activity-notes" placeholder="תיאור הפעילויות..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                שמור פעילות
+                            </button>
+                            <button type="reset" class="btn-secondary">
+                                <i class="fas fa-undo"></i>
+                                נקה טופס
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Today's Activities -->
+                <div class="today-activities">
+                    <h3><i class="fas fa-calendar-day"></i> פעילויות היום</h3>
+                    <div id="activities-list" class="activities-list">
+                        <p class="no-activities">אין פעילויות היום</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parents View -->
+            <div id="parents-view" class="view">
+                <div class="view-header">
+                    <h2><i class="fas fa-users"></i> ממשק הורים</h2>
+                    <p>צפייה בפעילויות הילד במהלך היום</p>
+                </div>
+
+                <div class="activity-form-container">
+                    <h3>בחר ילד ותאריך לצפייה</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parent-child-select">בחר ילד/ה:</label>
+                            <select id="parent-child-select">
+                                <option value="">בחר ילד/ה</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-select">תאריך:</label>
+                            <input type="date" id="date-select">
+                        </div>
+                        <button id="load-activities-btn" class="btn-primary">
+                            <i class="fas fa-search"></i>
+                            טען פעילויות
+                        </button>
+                    </div>
+                </div>
+
+                <div id="parent-activities" class="today-activities hidden">
+                    <h3><i class="fas fa-calendar-day"></i> פעילויות שנבחרו</h3>
+                    <div id="parent-activities-list" class="activities-list">
+                        <p class="no-activities">בחר ילד ותאריך כדי לראות פעילויות</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="add-child-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> הוסף ילד חדש</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="add-child-form">
+                <div class="form-group">
+                    <label for="new-child-name">שם הילד/ה:</label>
+                    <input type="text" id="new-child-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-child-age">גיל:</label>
+                    <input type="number" id="new-child-age" min="0" max="6" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">הוסף</button>
+                    <button type="button" class="btn-secondary modal-cancel">ביטול</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="notifications"></div>
+
+    <script>
+        // Storage Management
+        class StorageManager {
+            constructor() {
+                this.storageKeys = {
+                    CHILDREN: 'children',
+                    ACTIVITIES: 'activities',
+                    FORM_DRAFT: 'formDraft'
+                };
+            }
+
+            getChildren() {
+                try {
+                    const children = localStorage.getItem(this.storageKeys.CHILDREN);
+                    return children ? JSON.parse(children) : [];
+                } catch (error) {
+                    console.error('Error loading children:', error);
+                    return [];
+                }
+            }
+
+            saveChildren(children) {
+                try {
+                    localStorage.setItem(this.storageKeys.CHILDREN, JSON.stringify(children));
+                    return true;
+                } catch (error) {
+                    console.error('Error saving children:', error);
+                    return false;
+                }
+            }
+
+            addChild(child) {
+                const children = this.getChildren();
+                const newChild = {
+                    ...child,
+                    id: this.generateId(),
+                    createdAt: new Date().toISOString()
+                };
+                children.push(newChild);
+                this.saveChildren(children);
+                return newChild;
+            }
+
+            getChild(childId) {
+                const children = this.getChildren();
+                return children.find(child => child.id === childId);
+            }
+
+            getActivities(filters = {}) {
+                try {
+                    const activities = localStorage.getItem(this.storageKeys.ACTIVITIES);
+                    let allActivities = activities ? JSON.parse(activities) : [];
+                    
+                    if (filters.childId) {
+                        allActivities = allActivities.filter(activity => activity.childId === filters.childId);
+                    }
+                    
+                    if (filters.date) {
+                        allActivities = allActivities.filter(activity => activity.date === filters.date);
+                    }
+                    
+                    return allActivities.sort((a, b) => {
+                        const dateA = new Date(`${a.date}T${a.time}`);
+                        const dateB = new Date(`${b.date}T${b.time}`);
+                        return dateB - dateA;
+                    });
+                } catch (error) {
+                    console.error('Error loading activities:', error);
+                    return [];
+                }
+            }
+
+            saveActivities(activities) {
+                try {
+                    localStorage.setItem(this.storageKeys.ACTIVITIES, JSON.stringify(activities));
+                    return true;
+                } catch (error) {
+                    console.error('Error saving activities:', error);
+                    return false;
+                }
+            }
+
+            addActivity(activity) {
+                const activities = this.getActivities();
+                const newActivity = {
+                    ...activity,
+                    id: this.generateId(),
+                    createdAt: new Date().toISOString()
+                };
+                activities.push(newActivity);
+                this.saveActivities(activities);
+                return newActivity;
+            }
+
+            deleteActivity(activityId) {
+                const activities = this.getActivities();
+                const filteredActivities = activities.filter(activity => activity.id !== activityId);
+                this.saveActivities(filteredActivities);
+            }
+
+            generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+
+            clearFormDraft() {
+                localStorage.removeItem(this.storageKeys.FORM_DRAFT);
+            }
+        }
+
+        // Main Application Controller
+        class BabyCheckApp {
+            constructor() {
+                this.currentView = 'teachers';
+                this.currentTheme = localStorage.getItem('theme') || 'light';
+                this.storage = new StorageManager();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.applyTheme();
+                this.showView(this.currentView);
+                this.loadInitialData();
+                this.initializeTeachersView();
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const view = e.currentTarget.dataset.view;
+                        this.showView(view);
+                    });
+                });
+
+                // Theme toggle
+                document.getElementById('theme-toggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+
+                // Modal events
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal') || e.target.classList.contains('modal-close') || e.target.classList.contains('modal-cancel')) {
+                        this.closeModal();
+                    }
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            showView(viewName) {
+                // Hide all views
+                document.querySelectorAll('.view').forEach(view => {
+                    view.classList.remove('active');
+                });
+
+                // Remove active class from all nav tabs
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Show selected view
+                const targetView = document.getElementById(`${viewName}-view`);
+                if (targetView) {
+                    targetView.classList.add('active');
+                    this.currentView = viewName;
+                }
+
+                // Activate corresponding nav tab
+                const targetTab = document.querySelector(`[data-view="${viewName}"]`);
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
+
+                // Initialize view-specific functionality
+                if (viewName === 'teachers') {
+                    this.initializeTeachersView();
+                } else if (viewName === 'parents') {
+                    this.initializeParentsView();
+                }
+            }
+
+            toggleTheme() {
+                this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', this.currentTheme);
+                this.applyTheme();
+                
+                const themeBtn = document.getElementById('theme-toggle');
+                const icon = themeBtn.querySelector('i');
+                if (this.currentTheme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+
+            applyTheme() {
+                document.documentElement.setAttribute('data-theme', this.currentTheme);
+            }
+
+            showModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.add('show');
+                    }, 10);
+                }
+            }
+
+            closeModal() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                });
+            }
+
+            loadInitialData() {
+                // Load sample data if no data exists
+                if (!localStorage.getItem('children')) {
+                    this.loadSampleData();
+                }
+            }
+
+            loadSampleData() {
+                const sampleChildren = [
+                    { id: '1', name: 'יוסי כהן', age: 3 },
+                    { id: '2', name: 'שרה לוי', age: 4 },
+                    { id: '3', name: 'דוד ישראלי', age: 2 }
+                ];
+
+                const sampleActivities = [
+                    {
+                        id: '1',
+                        childId: '1',
+                        date: new Date().toISOString().split('T')[0],
+                        time: '08:30',
+                        type: 'eating',
+                        data: {
+                            mealType: 'breakfast',
+                            mealAmount: 'all',
+                            notes: 'אכל הכל בשמחה'
+                        }
+                    }
+                ];
+
+                localStorage.setItem('children', JSON.stringify(sampleChildren));
+                localStorage.setItem('activities', JSON.stringify(sampleActivities));
+            }
+
+            initializeTeachersView() {
+                this.loadChildren();
+                this.setupTeachersEventListeners();
+                this.loadTodayActivities();
+                this.setupMoodButtons();
+                this.setupSleepQualityButtons();
+                this.setupTimeButtons();
+            }
+
+            initializeParentsView() {
+                this.loadChildrenForParents();
+                this.setupParentsEventListeners();
+                this.setDefaultDate();
+            }
+
+            setupTeachersEventListeners() {
+                // Form submission
+                const form = document.getElementById('activity-form');
+                if (form) {
+                    form.removeEventListener('submit', this.handleFormSubmit);
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleFormSubmit();
+                    });
+                }
+
+                // Add child button
+                const addChildBtn = document.getElementById('add-child-btn');
+                if (addChildBtn) {
+                    addChildBtn.removeEventListener('click', this.handleAddChildClick);
+                    addChildBtn.addEventListener('click', () => {
+                        this.showModal('add-child-modal');
+                    });
+                }
+
+                // Add child form
+                const addChildForm = document.getElementById('add-child-form');
+                if (addChildForm) {
+                    addChildForm.removeEventListener('submit', this.handleAddChild);
+                    addChildForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleAddChild();
+                    });
+                }
+            }
+
+            setupParentsEventListeners() {
+                const loadBtn = document.getElementById('load-activities-btn');
+                if (loadBtn) {
+                    loadBtn.removeEventListener('click', this.loadParentActivities);
+                    loadBtn.addEventListener('click', () => {
+                        this.loadParentActivities();
+                    });
+                }
+            }
+
+            setupTimeButtons() {
+                // Time edit buttons
+                document.querySelectorAll('.time-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const fieldId = btn.dataset.timeField;
+                        if (fieldId) {
+                            this.showTimePicker(fieldId);
+                        }
+                    });
+                });
+
+                // Quick time buttons
+                document.querySelectorAll('.quick-time-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const fieldId = btn.dataset.field;
+                        const time = btn.dataset.time;
+                        if (fieldId && time) {
+                            this.setTime(fieldId, time);
+                        }
+                    });
+                });
+            }
+
+            setupMoodButtons() {
+                const moodButtons = document.querySelectorAll('.mood-btn');
+                moodButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        moodButtons.forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                    });
+                });
+            }
+
+            setupSleepQualityButtons() {
+                const sleepQualityButtons = document.querySelectorAll('.sleep-quality-btn');
+                sleepQualityButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        sleepQualityButtons.forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                    });
+                });
+            }
+
+            showTimePicker(fieldId) {
+                // Simple time input fallback
+                const time = prompt('הכנס שעה (פורמט HH:MM):', '09:00');
+                if (time && time.match(/^\d{2}:\d{2}$/)) {
+                    this.setTime(fieldId, time);
+                }
+            }
+
+            setTime(fieldId, time) {
+                if (!time || !time.match(/^\d{2}:\d{2}$/)) {
+                    console.error('Invalid time format:', time);
+                    return;
+                }
+
+                const hiddenInput = document.getElementById(fieldId);
+                if (hiddenInput) {
+                    hiddenInput.value = time;
+                }
+
+                const displayId = `${fieldId}-display`;
+                const displayElement = document.getElementById(displayId);
+                if (displayElement) {
+                    const timeText = displayElement.querySelector('.time-text');
+                    if (timeText) {
+                        timeText.textContent = time;
+                    }
+                }
+
+                if (displayElement) {
+                    displayElement.classList.add('time-updated');
+                    setTimeout(() => {
+                        displayElement.classList.remove('time-updated');
+                    }, 500);
+                }
+            }
+
+            loadChildren() {
+                const children = this.storage.getChildren();
+                const childSelect = document.getElementById('child-select');
+                
+                if (childSelect) {
+                    childSelect.innerHTML = '<option value="">בחר ילד/ה</option>';
+                    children.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child.id;
+                        option.textContent = `${child.name} (${child.age} שנים)`;
+                        childSelect.appendChild(option);
+                    });
+                }
+            }
+
+            loadChildrenForParents() {
+                const children = this.storage.getChildren();
+                const childSelect = document.getElementById('parent-child-select');
+                
+                if (childSelect) {
+                    childSelect.innerHTML = '<option value="">בחר ילד/ה</option>';
+                    children.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child.id;
+                        option.textContent = `${child.name} (${child.age} שנים)`;
+                        childSelect.appendChild(option);
+                    });
+                }
+            }
+
+            setDefaultDate() {
+                const dateSelect = document.getElementById('date-select');
+                if (dateSelect) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateSelect.value = today;
+                }
+            }
+
+            handleFormSubmit() {
+                const formData = this.getFormData();
+                
+                if (!formData.childId) {
+                    this.showNotification('אנא בחר ילד/ה', 'error');
+                    return;
+                }
+
+                if (!this.validateFormData(formData)) {
+                    return;
+                }
+
+                const activities = this.createActivitiesFromForm(formData);
+                
+                if (activities.length === 0) {
+                    this.showNotification('אנא מלא לפחות פעילות אחת', 'error');
+                    return;
+                }
+
+                let savedCount = 0;
+                activities.forEach(activity => {
+                    if (this.storage.addActivity(activity)) {
+                        savedCount++;
+                    }
+                });
+
+                if (savedCount > 0) {
+                    this.showNotification(`נשמרו ${savedCount} פעילויות בהצלחה!`, 'success');
+                    this.resetForm();
+                    this.loadTodayActivities();
+                } else {
+                    this.showNotification('שגיאה בשמירת הפעילויות', 'error');
+                }
+            }
+
+            getFormData() {
+                const form = document.getElementById('activity-form');
+                if (!form) return {};
+
+                const formData = new FormData(form);
+                const data = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    if (value && value.trim) {
+                        data[key] = value.trim();
+                    } else if (value) {
+                        data[key] = value;
+                    }
+                }
+
+                const selectedMood = document.querySelector('.mood-btn.selected');
+                if (selectedMood) {
+                    data.mood = selectedMood.dataset.mood;
+                }
+
+                const selectedSleepQuality = document.querySelector('.sleep-quality-btn.selected');
+                if (selectedSleepQuality) {
+                    data['sleep-quality'] = selectedSleepQuality.dataset.quality;
+                }
+
+                const selectedActivities = Array.from(document.querySelectorAll('input[name="activities"]:checked'))
+                    .map(checkbox => checkbox.value);
+                if (selectedActivities.length > 0) {
+                    data.activities = selectedActivities;
+                }
+
+                const childSelect = document.getElementById('child-select');
+                if (childSelect && childSelect.value) {
+                    data.childId = childSelect.value;
+                }
+
+                const sleepStartInput = document.getElementById('sleep-start');
+                const sleepEndInput = document.getElementById('sleep-end');
+                
+                if (sleepStartInput && sleepStartInput.value) {
+                    data['sleep-start'] = sleepStartInput.value;
+                }
+                if (sleepEndInput && sleepEndInput.value) {
+                    data['sleep-end'] = sleepEndInput.value;
+                }
+
+                return data;
+            }
+
+            validateFormData(data) {
+                const hasEating = data['meal-type'] && data['meal-amount'];
+                const hasDrinking = data['drink-type'] && data['drink-amount'] && parseFloat(data['drink-amount']) > 0;
+                const hasSleeping = data['sleep-start'] && data['sleep-end'];
+                const hasBathroom = data['bathroom-count'] && parseInt(data['bathroom-count']) > 0;
+                const hasMood = data.mood;
+                const hasActivities = data.activities && data.activities.length > 0;
+
+                if (!hasEating && !hasDrinking && !hasSleeping && !hasBathroom && !hasMood && !hasActivities) {
+                    this.showNotification('אנא מלא לפחות פעילות אחת', 'error');
+                    return false;
+                }
+
+                return true;
+            }
+
+            createActivitiesFromForm(formData) {
+                const activities = [];
+                const now = new Date();
+                const currentTime = now.toTimeString().slice(0, 5);
+                const currentDate = now.toISOString().split('T')[0];
+
+                // Eating activity
+                if (formData['meal-type'] && formData['meal-amount']) {
+                    activities.push({
+                        childId: formData.childId,
+                        date: currentDate,
+                        time: currentTime,
+                        type: 'eating',
+                        data: {
+                            mealType: formData['meal-type'],
+                            mealAmount: formData['meal-amount'],
+                            notes: formData['meal-notes'] || ''
+                        }
+                    });
+                }
+
+                // Drinking activity
+                if (formData['drink-type'] && formData['drink-amount']) {
+                    const amount = parseFloat(formData['drink-amount']);
+                    if (amount > 0) {
+                        activities.push({
+                            childId: formData.childId,
+                            date: currentDate,
+                            time: currentTime,
+                            type: 'drinking',
+                            data: {
+                                drinkType: formData['drink-type'],
+                                amount: amount
+                            }
+                        });
+                    }
+                }
+
+                // Sleeping activity
+                if (formData['sleep-start'] && formData['sleep-end']) {
+                    activities.push({
+                        childId: formData.childId,
+                        date: currentDate,
+                        time: formData['sleep-start'],
+                        type: 'sleeping',
+                        data: {
+                            sleepStart: formData['sleep-start'],
+                            sleepEnd: formData['sleep-end'],
+                            sleepQuality: formData['sleep-quality'] || 'good'
+                        }
+                    });
+                }
+
+                // Bathroom activity
+                if (formData['bathroom-count']) {
+                    const count = parseInt(formData['bathroom-count']);
+                    if (count > 0) {
+                        activities.push({
+                            childId: formData.childId,
+                            date: currentDate,
+                            time: currentTime,
+                            type: 'bathroom',
+                            data: {
+                                count: count,
+                                type: formData['bathroom-type'] || 'wet',
+                                notes: formData['bathroom-notes'] || ''
+                            }
+                        });
+                    }
+                }
+
+                // Mood activity
+                if (formData.mood) {
+                    activities.push({
+                        childId: formData.childId,
+                        date: currentDate,
+                        time: currentTime,
+                        type: 'mood',
+                        data: {
+                            mood: formData.mood,
+                            cryingLevel: formData['crying-level'] || 'none'
+                        }
+                    });
+                }
+
+                // Activities
+                if (formData.activities && formData.activities.length > 0) {
+                    activities.push({
+                        childId: formData.childId,
+                        date: currentDate,
+                        time: currentTime,
+                        type: 'activities',
+                        data: {
+                            activities: formData.activities,
+                            notes: formData['activity-notes'] || ''
+                        }
+                    });
+                }
+
+                return activities;
+            }
+
+            resetForm() {
+                const form = document.getElementById('activity-form');
+                if (form) {
+                    form.reset();
+                    
+                    document.querySelectorAll('.mood-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+
+                    document.querySelectorAll('.sleep-quality-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+
+                    document.querySelectorAll('.time-text').forEach(timeText => {
+                        timeText.textContent = '--:--';
+                    });
+
+                    const sleepStartInput = document.getElementById('sleep-start');
+                    const sleepEndInput = document.getElementById('sleep-end');
+                    
+                    if (sleepStartInput) sleepStartInput.value = '';
+                    if (sleepEndInput) sleepEndInput.value = '';
+
+                    this.storage.clearFormDraft();
+                }
+            }
+
+            handleAddChild() {
+                const form = document.getElementById('add-child-form');
+                const formData = new FormData(form);
+                
+                const childName = formData.get('new-child-name');
+                const childAge = formData.get('new-child-age');
+
+                if (!childName || !childName.trim()) {
+                    this.showNotification('אנא הכנס שם ילד', 'error');
+                    return;
+                }
+
+                if (!childAge || parseInt(childAge) < 0 || parseInt(childAge) > 6) {
+                    this.showNotification('אנא הכנס גיל תקין (0-6)', 'error');
+                    return;
+                }
+
+                const childData = {
+                    name: childName.trim(),
+                    age: parseInt(childAge)
+                };
+
+                const newChild = this.storage.addChild(childData);
+                if (newChild) {
+                    this.showNotification('ילד נוסף בהצלחה!', 'success');
+                    this.loadChildren();
+                    this.loadChildrenForParents();
+                    this.closeModal();
+                    form.reset();
+                } else {
+                    this.showNotification('שגיאה בהוספת ילד', 'error');
+                }
+            }
+
+            loadTodayActivities() {
+                const today = new Date().toISOString().split('T')[0];
+                const activities = this.storage.getActivities({ date: today });
+                this.displayActivities(activities);
+            }
+
+            displayActivities(activities) {
+                const activitiesList = document.getElementById('activities-list');
+                if (!activitiesList) return;
+
+                if (activities.length === 0) {
+                    activitiesList.innerHTML = '<p class="no-activities">אין פעילויות היום</p>';
+                    return;
+                }
+
+                const activitiesByChild = {};
+                activities.forEach(activity => {
+                    if (!activitiesByChild[activity.childId]) {
+                        activitiesByChild[activity.childId] = [];
+                    }
+                    activitiesByChild[activity.childId].push(activity);
+                });
+
+                activitiesList.innerHTML = '';
+
+                Object.keys(activitiesByChild).forEach(childId => {
+                    const child = this.storage.getChild(childId);
+                    const childActivities = activitiesByChild[childId];
+                    
+                    const childSection = document.createElement('div');
+                    childSection.style.marginBottom = '2rem';
+                    childSection.style.padding = '1rem';
+                    childSection.style.backgroundColor = 'var(--background-secondary)';
+                    childSection.style.borderRadius = 'var(--border-radius-lg)';
+                    
+                    const childHeader = document.createElement('h4');
+                    childHeader.textContent = child ? child.name : 'ילד לא ידוע';
+                    childHeader.style.color = 'var(--primary-color)';
+                    childHeader.style.marginBottom = '1rem';
+                    childSection.appendChild(childHeader);
+
+                    childActivities.forEach(activity => {
+                        const activityElement = this.createActivityElement(activity);
+                        childSection.appendChild(activityElement);
+                    });
+
+                    activitiesList.appendChild(childSection);
+                });
+            }
+
+            createActivityElement(activity) {
+                const activityElement = document.createElement('div');
+                activityElement.className = 'activity-item';
+                activityElement.style.marginBottom = '1rem';
+
+                const child = this.storage.getChild(activity.childId);
+                const activityData = activity.data;
+
+                let activityContent = '';
+                let activityIcon = '';
+                let activityColor = '';
+
+                switch (activity.type) {
+                    case 'eating':
+                        activityIcon = 'fas fa-utensils';
+                        activityColor = '#FF9800';
+                        activityContent = this.formatEatingActivity(activityData);
+                        break;
+                    case 'drinking':
+                        activityIcon = 'fas fa-tint';
+                        activityColor = '#2196F3';
+                        activityContent = this.formatDrinkingActivity(activityData);
+                        break;
+                    case 'sleeping':
+                        activityIcon = 'fas fa-bed';
+                        activityColor = '#9C27B0';
+                        activityContent = this.formatSleepingActivity(activityData);
+                        break;
+                    case 'bathroom':
+                        activityIcon = 'fas fa-bath';
+                        activityColor = '#4CAF50';
+                        activityContent = this.formatBathroomActivity(activityData);
+                        break;
+                    case 'mood':
+                        activityIcon = 'fas fa-smile';
+                        activityColor = '#FF5722';
+                        activityContent = this.formatMoodActivity(activityData);
+                        break;
+                    case 'activities':
+                        activityIcon = 'fas fa-gamepad';
+                        activityColor = '#607D8B';
+                        activityContent = this.formatActivitiesActivity(activityData);
+                        break;
+                }
+
+                activityElement.innerHTML = `
+                    <div class="activity-header">
+                        <div class="activity-child">
+                            <i class="${activityIcon}" style="color: ${activityColor}"></i>
+                            ${child ? child.name : 'ילד לא ידוע'}
+                        </div>
+                        <div class="activity-time">${this.formatTime(activity.time)}</div>
+                    </div>
+                    <div class="activity-details">
+                        ${activityContent}
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <button class="btn-secondary btn-sm" onclick="app.deleteActivity('${activity.id}')">
+                            <i class="fas fa-trash"></i> מחק
+                        </button>
+                    </div>
+                `;
+
+                return activityElement;
+            }
+
+            formatEatingActivity(data) {
+                const mealTypes = {
+                    breakfast: 'ארוחת בוקר',
+                    lunch: 'ארוחת צהריים',
+                    snack: 'חטיף'
+                };
+                const mealAmounts = {
+                    all: 'אכל הכל',
+                    half: 'חצי',
+                    little: 'קצת',
+                    none: 'לא אכל'
+                };
+                
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-utensils"></i>
+                        <span>${mealTypes[data.mealType] || data.mealType} - ${mealAmounts[data.mealAmount] || data.mealAmount}</span>
+                    </div>
+                    ${data.notes ? `<div class="activity-detail"><i class="fas fa-comment"></i><span>${data.notes}</span></div>` : ''}
+                `;
+            }
+
+            formatDrinkingActivity(data) {
+                const drinkTypes = {
+                    water: 'מים',
+                    juice: 'מיץ',
+                    milk: 'חלב'
+                };
+                
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-tint"></i>
+                        <span>${drinkTypes[data.drinkType] || data.drinkType} - ${data.amount} כוסות</span>
+                    </div>
+                `;
+            }
+
+            formatSleepingActivity(data) {
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-bed"></i>
+                        <span>${data.sleepStart} - ${data.sleepEnd}</span>
+                    </div>
+                    <div class="activity-detail">
+                        <i class="fas fa-star"></i>
+                        <span>${data.sleepQuality === 'good' ? 'שינה שקטה' : 'שינה חסרת מנוחה'}</span>
+                    </div>
+                `;
+            }
+
+            formatBathroomActivity(data) {
+                const types = {
+                    wet: 'רטוב',
+                    dry: 'יבש'
+                };
+                
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-bath"></i>
+                        <span>${data.count} פעמים - ${types[data.type] || data.type}</span>
+                    </div>
+                    ${data.notes ? `<div class="activity-detail"><i class="fas fa-comment"></i><span>${data.notes}</span></div>` : ''}
+                `;
+            }
+
+            formatMoodActivity(data) {
+                const moods = {
+                    happy: 'שמח 😊',
+                    sad: 'עצוב 😢',
+                    angry: 'עצבני 😠',
+                    calm: 'רגוע 😌'
+                };
+                const cryingLevels = {
+                    none: 'לא בכה',
+                    little: 'בכה קצת',
+                    much: 'בכה הרבה'
+                };
+                
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-smile"></i>
+                        <span>${moods[data.mood] || data.mood}</span>
+                    </div>
+                    <div class="activity-detail">
+                        <i class="fas fa-tear"></i>
+                        <span>${cryingLevels[data.cryingLevel] || data.cryingLevel}</span>
+                    </div>
+                `;
+            }
+
+            formatActivitiesActivity(data) {
+                const activityTypes = {
+                    'free-play': 'משחק חופשי',
+                    'structured-play': 'משחק מובנה',
+                    'art': 'יצירה וציור',
+                    'music': 'שירים וסיפורים',
+                    'outdoor': 'משחק בחצר'
+                };
+                
+                const activitiesList = data.activities.map(activity => 
+                    activityTypes[activity] || activity
+                ).join(', ');
+                
+                return `
+                    <div class="activity-detail">
+                        <i class="fas fa-gamepad"></i>
+                        <span>${activitiesList}</span>
+                    </div>
+                    ${data.notes ? `<div class="activity-detail"><i class="fas fa-comment"></i><span>${data.notes}</span></div>` : ''}
+                `;
+            }
+
+            deleteActivity(activityId) {
+                if (confirm('האם אתה בטוח שברצונך למחוק פעילות זו?')) {
+                    this.storage.deleteActivity(activityId);
+                    this.showNotification('פעילות נמחקה בהצלחה', 'success');
+                    this.loadTodayActivities();
+                }
+            }
+
+            loadParentActivities() {
+                const childSelect = document.getElementById('parent-child-select');
+                const dateSelect = document.getElementById('date-select');
+                
+                if (!childSelect.value || !dateSelect.value) {
+                    this.showNotification('אנא בחר ילד ותאריך', 'warning');
+                    return;
+                }
+
+                const activities = this.storage.getActivities({
+                    childId: childSelect.value,
+                    date: dateSelect.value
+                });
+
+                const parentActivitiesSection = document.getElementById('parent-activities');
+                const parentActivitiesList = document.getElementById('parent-activities-list');
+                
+                if (parentActivitiesSection) {
+                    parentActivitiesSection.classList.remove('hidden');
+                }
+
+                if (activities.length === 0) {
+                    parentActivitiesList.innerHTML = '<p class="no-activities">אין פעילויות לתאריך זה</p>';
+                } else {
+                    this.displayParentActivities(activities);
+                    this.showNotification(`נטענו ${activities.length} פעילויות`, 'success');
+                }
+            }
+
+            displayParentActivities(activities) {
+                const parentActivitiesList = document.getElementById('parent-activities-list');
+                if (!parentActivitiesList) return;
+
+                parentActivitiesList.innerHTML = '';
+
+                activities.forEach(activity => {
+                    const activityElement = this.createActivityElement(activity);
+                    // Remove delete button for parents view
+                    const deleteBtn = activityElement.querySelector('.btn-secondary');
+                    if (deleteBtn) {
+                        deleteBtn.remove();
+                    }
+                    parentActivitiesList.appendChild(activityElement);
+                });
+            }
+
+            formatTime(timeString) {
+                if (!timeString || typeof timeString !== 'string') {
+                    return timeString || '--:--';
+                }
+                
+                if (timeString.match(/^\d{1,2}:\d{2}$/)) {
+                    const [hours, minutes] = timeString.split(':');
+                    const paddedHours = hours.padStart(2, '0');
+                    return `${paddedHours}:${minutes}`;
+                }
+                
+                return timeString;
+            }
+
+            showNotification(message, type = 'info', duration = 3000) {
+                const notifications = document.getElementById('notifications');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                const icon = document.createElement('i');
+                switch (type) {
+                    case 'success':
+                        icon.className = 'fas fa-check-circle';
+                        break;
+                    case 'error':
+                        icon.className = 'fas fa-exclamation-circle';
+                        break;
+                    case 'warning':
+                        icon.className = 'fas fa-exclamation-triangle';
+                        break;
+                    default:
+                        icon.className = 'fas fa-info-circle';
+                }
+                
+                const text = document.createElement('span');
+                text.textContent = message;
+                
+                notification.appendChild(icon);
+                notification.appendChild(text);
+                notifications.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.classList.add('hide');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new BabyCheckApp();
+        });
+    </script>
+</body>
+</html>
